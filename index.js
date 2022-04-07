@@ -2,6 +2,7 @@ const express = require('express')
 const tracer = require('dd-trace')
 const app = express()
 const port = 3000
+const wrapDatadog = require('./wrapDatadog');
 
 tracer.init({
   enabled: true,
@@ -9,16 +10,31 @@ tracer.init({
   service: 'apm-demo',
 });
 
-const some_function = () => {
-  const parentSpan = tracer.scope().active()
+const some_function_2 = (function some_function_2() {
+  
+})
+|> wrapDatadog
+
+const some_function_1 = (function some_function_1() {
   for (var i = 0; i < 100; i++) {
-    const span = tracer.startSpan(i, { childOf: parentSpan })
-    span.finish()
+    some_function_2()
+  }
+}) 
+|> wrapDatadog
+
+function some_function_3() {
+  for (var i = 0; i < 100; i++) {
+    some_function_2()
   }
 }
 
 app.get('/', (req, res) => {
-  some_function()
+  some_function_1()
+  res.send('Hello World!')
+})
+
+app.get('/test', (req, res) => {
+  some_function_3()
   res.send('Hello World!')
 })
 

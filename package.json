@@ -2,5 +2,10 @@
   "dependencies": {
     "dd-trace": "^2.4.2",
     "express": "^4.17.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.17.9",
+    "@babel/node": "^7.16.8",
+    "@babel/plugin-proposal-pipeline-operator": "^7.17.6"
   }
 }
